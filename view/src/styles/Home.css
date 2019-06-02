@@ -1,0 +1,29 @@
+#home .jumbotron
+{
+    padding: 1rem 3rem;
+}
+.topic-card
+{
+    width: 100% !important;
+    margin: 1% 0;
+    text-align: center;
+}
+.topic-card .info
+{
+    display: flex;
+    justify-content: flex-end;
+}
+.topic-card .info i
+{
+    position: absolute;
+    right: 15%;
+    bottom: 5%;
+}
+.topic-card:hover
+{
+    background-color: rgba(174, 198, 248, 1);
+}
+a:hover
+{
+    text-decoration: none;
+}

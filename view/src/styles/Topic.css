@@ -1,0 +1,22 @@
+#singleTopic .card
+{
+    width: 80% !important;
+    margin-left: auto;
+    margin-right: auto;
+    height: 92vh;
+}
+#singleTopic .card-text
+{
+    margin-top: 2%;
+    display: flex;
+    justify-content: center;
+}
+#singleTopic .card-subtitle
+{
+    display: flex;
+    justify-content: flex-end;
+}
+hr
+{
+    margin: 0;
+}

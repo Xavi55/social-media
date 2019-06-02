@@ -1,0 +1,15 @@
+#login
+{
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+}
+.card
+{
+    width: 44%;
+}
+.card-header
+{
+    display: flex;
+    justify-content: center;
+}
