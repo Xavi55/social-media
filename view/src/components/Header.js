@@ -17,7 +17,7 @@ const Header = (props) =>
 {
 return(
 <Navbar bg="light" expand="md">
-    <Navbar.Brand>Header</Navbar.Brand>
+    <Navbar.Brand>Zocialitt</Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto links">{/*mr-auto allows a space in between */}

@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 const db = require('./models/dbAccess');
 const User = require('./models/User');
 const Topic = require('./models/Topic'); 
-//const Message = require('./models/Message'); 
+const Message = require('./models/Message'); 
 
 //Middleware
 app.use(morgan('dev'));
@@ -30,8 +30,13 @@ app.use(express.static(path.join(__dirname,'view/build')));
 /////////////   API ROUTES   //////////////////
 app.post('/signup',async (req,res)=>
 {
-    let username = req.body.username;
-    let password = req.body.password;
+    //let username = req.body.username;
+    //let password = req.body.password;
+
+    let {
+        username,
+        password
+    } = req.body;
 
     let x = await User.find({'username':username});
     if(x.length)
@@ -91,9 +96,14 @@ app.get('/logout',async (req,res)=>
 
 app.post('/addTopic',async (req,res)=>
 {
-    let topicName = req.body.topicName;
-    let subtext = req.body.subtext;
-    let author = req.body.author;
+    //let topicName = req.body.topicName;
+    //let subtext = req.body.subtext;
+    //let author = req.body.author;
+    let {
+        topicName,
+        subtext,
+        author
+    } = req.body;
     let timestamp = req.body.timestamp;
     let x = await Topic.find({'topicName':topicName});
     if(x.length)
@@ -127,13 +137,41 @@ app.get('/loadTopics',async (req,res)=>
 
 app.post('/newMessage',async(req,res)=>
 {
+    let {
+        topicID,
+        message,
+        reply,
+        author,
+        timestamp,
 
+    } = req.body;
+
+    await Message.create({
+        'topicID':topicID,
+        'message':message,
+        'reply':reply,
+        'author':author,
+        'timestamp':timestamp
+    });
+    res.json({'pass':1,'mess':'new message'})
 })
 
-app.get('loadMessages', async(req,res)=>
+app.get('/loadMessages/:topicID', async(req,res)=>
 {
-    let x = await Message.find();
-    res.json({'Messages':x});
+    let {//destructing
+            topicID
+
+        } = req.params;
+    let x = await Message.find({"topicID":topicID});
+    let rev=[]
+    for(let i=x.length-1;i>-1;i--)
+    {
+        rev.push(x[i])
+        //console.log(x[i]);
+    }//most recent up top
+
+    res.json({'messages':rev});
+    //res.json({'Messages':x});
 })
 /////////////////////////////////////////////
 app.listen(PORT,()=>

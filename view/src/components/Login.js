@@ -37,6 +37,14 @@ class Login extends React.Component {
       if(this.state.username.length===0 && this.state.password.length===0)
         return true;
     }
+
+    clearState=()=>
+    {
+        this.setState({
+            username:'',
+            password:''
+        })
+    }
   
     login=(e,val)=>
     {
@@ -59,11 +67,20 @@ class Login extends React.Component {
             fetch('/login',options)
             .then(res=>res.json())//preProcess
             .then(data=>{
-                console.log(data);
-                this.setState({
+                if(data.pass)
+                {
+                    console.log(data);
+                    this.setState({
                     okay:true,
                     session:data.session
                 });
+                }
+                else
+                {
+                    alert(data.mess);
+                    this.clearState();
+                }
+                
             })
         }
     }
@@ -89,11 +106,19 @@ class Login extends React.Component {
             fetch('/signup',options)
             .then(res=>res.json())//preProcess
             .then(data=>{
-                console.log(data);
+                if(data.pass)
+                {
+                //console.log(data);
                 this.setState({
                     okay:true,
                     session:data.session
                 });
+                }
+                else
+                {
+                    alert(data.mess);
+                    this.clearState();
+                }
             })
         }
     }
@@ -158,6 +183,7 @@ class Login extends React.Component {
                                     onChange={(e)=>this.handleChange('username',e.target.value)} 
                                     autoFocus 
                                     maxLength='6' 
+                                    value={this.state.username}
                                 />
                                 {/* <Form.Text className="text-muted"></Form.Text> */}
                             </Form.Group>
@@ -166,7 +192,9 @@ class Login extends React.Component {
                                     type="password" 
                                     placeholder="Password" 
                                     onChange={(e)=>this.handleChange('password',e.target.value)} 
-                                    maxLength='12'/>
+                                    maxLength='12'
+                                    value={this.state.password}
+                                />
                             </Form.Group>
                             {/* <Form.Group controlId="formBasicChecbox">
                                 <Form.Check type="checkbox" label="Check me out" />
@@ -186,16 +214,19 @@ class Login extends React.Component {
                                     type="susername" 
                                     placeholder="Username" 
                                     onChange={(e)=>this.handleChange('username',e.target.value)} 
-                                    autoFocus maxLength='6'
+                                    autoFocus
+                                    maxLength='6'
+                                    value={this.state.username}
                                 />
                                 {/* <Form.Text className="text-muted"></Form.Text> */}
                             </Form.Group>
                             <Form.Group controlId="spassword">
                                 <FormControl 
-                                    type="spassword" 
+                                    type="password" 
                                     placeholder="Password" 
                                     onChange={(e)=>this.handleChange('password',e.target.value)}
                                     maxLenth='12'
+                                    value={this.state.password}
                                 />
                             </Form.Group>
                         </Form>

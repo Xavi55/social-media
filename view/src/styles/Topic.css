@@ -16,6 +16,10 @@
     display: flex;
     justify-content: flex-end;
 }
+#singleTopic .card-body
+{
+    overflow: auto
+}
 hr
 {
     margin: 0;
