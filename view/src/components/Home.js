@@ -40,6 +40,7 @@ class Home extends React.Component
     render()
     {
         const topics = this.state.topics;
+        console.log(topics);
         return(
             <div id='home'>
                 <Jumbotron>

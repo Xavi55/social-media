@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -17,7 +18,7 @@ class AddTopic extends React.Component
             subtext:'',
             timestamp:'',
             session:{},
-            logged:false
+            redirect:false
         };
     }
 
@@ -44,7 +45,7 @@ class AddTopic extends React.Component
         }
         else
         {
-            if(this.state.logged)
+            if(this.state.session.uID)
             {
                 const options=
                 {
@@ -67,8 +68,7 @@ class AddTopic extends React.Component
                     if(data.pass)
                     {
                         alert(data.mess);
-                        this.props.history.push(`/topic/${data.topicName}`);//redirect
-                        //NEED TO PASS PROPS???
+                        this.setState({redirect:true});
                     }
                 });
             }
@@ -88,7 +88,6 @@ class AddTopic extends React.Component
                 console.log('user is logged');
                 this.setState({
                     session:data.session, 
-                    logged:true
                 });
             }
         })
@@ -124,30 +123,47 @@ class AddTopic extends React.Component
     {
         return(
             <div id='addTopic'>
-            <Card>
-                <Card.Header>Enter your Topic</Card.Header>
-                <Card.Body>
-                    <InputGroup className="mb-3">
-                    <InputGroup.Prepend>
-                    <InputGroup.Text id="basic-addon1">Title</InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <FormControl 
-                        autoFocus
-                        onChange={(e)=>this.handleChange('topicName',e.target.value)}
-                    />
-                    </InputGroup>
-                    <InputGroup>
+
+            {
+                !this.state.redirect
+                ?
+                <Card>
+                    <Card.Header>Enter your Topic</Card.Header>
+                    <Card.Body>
+                        <InputGroup className="mb-3">
                         <InputGroup.Prepend>
+                        <InputGroup.Text id="basic-addon1">Title</InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl 
-                            as="textarea" 
-                            placeholder='Details..'
-                            onChange={(e)=>this.handleChange('subtext',e.target.value)}
+                            autoFocus
+                            onChange={(e)=>this.handleChange('topicName',e.target.value)}
                         />
-                    </InputGroup>
-                </Card.Body>
-                <Button variant="primary" onClick={this.handleSumbit}>Sumbit</Button>
-            </Card>
+                        </InputGroup>
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                            </InputGroup.Prepend>
+                            <FormControl 
+                                as="textarea" 
+                                placeholder='Details..'
+                                onChange={(e)=>this.handleChange('subtext',e.target.value)}
+                            />
+                        </InputGroup>
+                    </Card.Body>
+                    <Button variant="primary" onClick={this.handleSumbit}>Sumbit</Button>
+                    
+                </Card>
+                :
+                <Redirect to={{
+                    pathname:`/topic/${this.state.topicName}`,
+                    state:{
+                        topic:{
+                            topicName:this.state.topicName,
+                            subtext:this.state.subtext,
+                            author:this.state.session.username,
+                            timestamp:this.state.timestamp
+                        }}
+                }} />
+            }
         </div>
         )
     }
