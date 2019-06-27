@@ -1,0 +1,14 @@
+.topic-message
+{
+    margin-bottom: 1em;
+}
+.topic-message .alert
+{
+    margin: 0;
+}
+.topic-message .message-info
+{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 4px;
+}

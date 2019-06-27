@@ -2,6 +2,8 @@ import React from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 
+import '../styles/Message.css';
+
 const Message =(props)=>
 {
 
@@ -12,8 +14,11 @@ const Message =(props)=>
             <Alert
                 variant='info'    
             >
-                {message.message}
+                {message.message} 
             </Alert>
+            <div className='message-info'>
+                -{message.author} {message.timestamp}
+            </div>
         </div>
     )
 }

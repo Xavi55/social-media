@@ -14,13 +14,13 @@ import AddTopic from './components/AddTopic';
 
 //Home Page
 class App extends React.Component {
-    constructor(props)
+   /*  constructor(props)
     {
         super(props);
         this.state={
             session:{}
         }
-    }
+    } */
 
     componentWillMount()
     {

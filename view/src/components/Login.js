@@ -225,7 +225,7 @@ class Login extends React.Component {
                                     type="password" 
                                     placeholder="Password" 
                                     onChange={(e)=>this.handleChange('password',e.target.value)}
-                                    maxLenth='12'
+                                    maxLength='12'
                                     value={this.state.password}
                                 />
                             </Form.Group>

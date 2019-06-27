@@ -1,7 +1,3 @@
-#home .jumbotron
-{
-    padding: 1rem 3rem;
-}
 .topic-card
 {
     width: 100% !important;
@@ -12,12 +8,12 @@
 {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    margin: 0 4px 0 0;
 }
 .topic-card .info i
 {
-    position: absolute;
-    right: 15%;
-    bottom: 5%;
+    margin-right: 4px;
 }
 .topic-card:hover
 {

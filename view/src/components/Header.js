@@ -16,7 +16,7 @@ import Link from 'react-router-dom/Link';
 const Header = (props) =>
 {
 return(
-<Navbar bg="light" expand="md">
+<Navbar bg="light" expand="md" style={{'margin':'0 0 10px 0'}}>
     <Navbar.Brand>Zocialitt</Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">

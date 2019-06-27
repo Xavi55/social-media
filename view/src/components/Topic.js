@@ -5,9 +5,13 @@ import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 
 import Message from './Message';
-
+import PopUp from './PopUp';
 import '../styles/Topic.css';
 
 class Topic extends React.Component
@@ -18,7 +22,11 @@ class Topic extends React.Component
         this.state={
             listMessages:[],
             message:'',
-            session:{}
+            timestamp:'',
+            session:{},
+            PopUpMessage:'',
+            PopUpColor:'',
+            ShowPopUp:false
         }
     }
 
@@ -66,7 +74,7 @@ class Topic extends React.Component
                         'topicID':topic._id,
                         'reply':0,
                         'author':sess.username,
-                        'timestamp':0,
+                        'timestamp':this.state.timestamp,
                         'message':this.state.message
                     }),
                     headers:{
@@ -85,7 +93,8 @@ class Topic extends React.Component
                             topicID:topic.id,
                             reply:'0',
                             message:this.state.message,
-                            author:sess.username
+                            author:sess.username,
+                            timestamp:this.state.timestamp
                         }];
                         let newList = temp.concat(this.state.listMessages);
                         this.setState({
@@ -98,12 +107,22 @@ class Topic extends React.Component
             }
             else
             {
-                alert('Log in first!');
+                //alert('Log in first!');
+                this.setState({
+                    PopUpMessage:'Log in First!',
+                    PopUpColor:'danger',
+                    ShowPopUp:true
+                })
             }
         }
         else
         {
-            alert('Need message!');
+            //alert('Need message!');
+            this.setState({
+                PopUpMessage:'Need Message!',
+                PopUpColor:'danger',
+                ShowPopUp:true
+            })
         }
        
     }
@@ -113,10 +132,36 @@ class Topic extends React.Component
         this.setState({message:e});
     }
 
+    getDate=()=>
+    {
+        const Months={
+            0:"Jan",
+            1:"Feb",
+            2:"Mar",
+            3:"Apr",
+            4:"May",
+            5:"Jun",
+            6:"Jul",
+            7:"Aug",
+            8:"Sep",
+            9:"Oct",
+            10:"Nov",
+            11:"Dec"
+        };
+        let d = new Date();
+        this.setState({timestamp:String(Months[d.getMonth()])+' '+String(d.getDate())});
+    }
+
+    closePopUp=()=>
+    {
+        this.setState({show:!this.state.ShowPopUp});
+    }
+
     componentWillMount()
     {
         this.loginCheck();
         this.fetchMessages();
+        this.getDate();
         //console.log(this.props.location.state.topic);
     }
 
@@ -124,19 +169,21 @@ class Topic extends React.Component
     {
         const main = this.props.location.state.topic;
         return(
-            <div id='singleTopic'>
-                <Card>
+            <Container id='singleTopic'>
+                <Row>
+                    <Col md={12}>
+                    <Card>
                     <Card.Header>
                         <h5>{main.topicName}</h5>
                         <br/>
-                        <div className='info'>
-                        </div>
                     </Card.Header>
                     <Card.Text>
                         {main.subtext}
                     </Card.Text>
                     <Card.Subtitle>
-                        <i className="fa fa-user" aria-hidden="true"></i>{main.author} on {main.timestamp}
+                        <div className='topic-info'>
+                            <i className="fa fa-user" aria-hidden="true"></i>{main.author} on {main.timestamp}
+                        </div>
                     </Card.Subtitle>
                     <hr/>
                     <Card.Body>
@@ -151,10 +198,22 @@ class Topic extends React.Component
                             })
                             :
                             <h2>Unable to fetch messages?</h2>
-                        
                         }
-                        {/* <Message messageData={{'text':'sample text'}}/> */}
                     </Card.Body>
+                    {
+                        this.state.ShowPopUp
+                        ?
+                        <PopUp 
+                            ClosePopUp={(value)=>{
+                                this.setState({ShowPopUp:value})//callback
+                            }} 
+                            message={this.state.PopUpMessage} 
+                            color={this.state.PopUpColor}
+                            show={this.state.ShowPopUp}
+                        />
+                        :
+                        null
+                    }
                     <InputGroup className="mb-3">
                     <FormControl
                         placeholder="..."
@@ -168,13 +227,16 @@ class Topic extends React.Component
                             <Button 
                                 variant="outline-success"
                                 onClick={this.submitMessage}
-                            >Button</Button>
+                            >
+                                <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
+                            </Button>
                         </InputGroup.Append>
                     </InputGroup>
-                </Card>
-            </div>
+                    </Card>
+                    </Col>
+                </Row>
+            </Container>
         )
     }
-    
 }
 export default Topic;

@@ -5,6 +5,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 import '../styles/Home.css';
 
@@ -15,7 +18,7 @@ class Home extends React.Component
         super(props);
         this.state={
             topics:[],
-            session:{}
+            //session:{}
         }
     }
 
@@ -42,8 +45,10 @@ class Home extends React.Component
         const topics = this.state.topics;
         console.log(topics);
         return(
-            <div id='home'>
-                <Jumbotron>
+            <Container id='home'>
+            <Row>
+                <Col>
+                    <Jumbotron>
                     <h3>Trending Topics!</h3>
                 {
                 topics.map((topic,i)=>
@@ -66,7 +71,9 @@ class Home extends React.Component
                 }
                     <Link to='/addTopic'><Button variant="primary">Add a Topic!</Button></Link>
                 </Jumbotron>
-            </div>
+                </Col>
+            </Row>
+            </Container>
         )
     }
 }
