@@ -22,6 +22,7 @@ return(
     <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto links">{/*mr-auto allows a space in between */}
             <Nav.Link><Link to='/'>Home</Link></Nav.Link>
+            {console.log(props)}
             <Nav.Link><Link to='/login'>Login</Link></Nav.Link>
             {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

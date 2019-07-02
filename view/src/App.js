@@ -14,31 +14,38 @@ import AddTopic from './components/AddTopic';
 
 //Home Page
 class App extends React.Component {
-   /*  constructor(props)
+   constructor(props)
     {
         super(props);
         this.state={
             session:{}
         }
-    } */
+    }
 
-    componentWillMount()
+    getSession=(sess)=>
     {
-        /* fetch('/login')
+        this.setState({
+            session:sess
+        })
+    }
+
+    /*componentWillMount()
+    {
+        fetch('/login')
         .then(res=>res.json())
         .then(res=>
         {
             this.setState({session:res});
-        }) */
-    }
+        }) 
+    }*/
 
     render(){
     return (
     <div className="App">
         <BrowserRouter> 
-            <Header />
+            <Header logged={this.state.session} />
             <Switch>
-                <Route exact path='/login' component={Login}/>
+                <Route exact path='/login' getSess={this.getSession} component={Login}/>
                 <Route exact path='/' component={Home} />
                 <Route exact path='/addTopic' component={AddTopic} />
                 

@@ -13,7 +13,7 @@ import Row from 'react-bootstrap/Row';
 
 //import Row from 'react-bootstrap/Row';
 //import Row from 'react-bootstrap/Row';
-
+import PopUp from './PopUp';
 import '../styles/Login.css';
 
 class Login extends React.Component {
@@ -25,7 +25,10 @@ class Login extends React.Component {
         username:'',
         password:'',
         okay:false,
-        session:{}
+        session:{},
+        PopUpColor:'',
+        PopUpMessage:'',
+        ShowPopUp:false
       };
       //this.login = this.login.bind(this);
       //this.isEmpty = this.isEmpty.bind(this);
@@ -50,7 +53,12 @@ class Login extends React.Component {
     {
         if(this.isEmpty())
         {
-            console.log('Empty');
+            //console.log('Empty');
+            this.setState({
+                PopUpColor:'danger',
+                PopUpMessage:'Enter username or password!',
+                ShowPopUp:true
+            })
         }
         else
         {
@@ -71,13 +79,21 @@ class Login extends React.Component {
                 {
                     console.log(data);
                     this.setState({
-                    okay:true,
-                    session:data.session
-                });
+                        okay:true,
+                        session:data.session,
+                        PopUpColor:'success',
+                        PopUpMessage:'Logging you in ...',
+                        ShowPopUp:true
+                    });
                 }
                 else
                 {
-                    alert(data.mess);
+                    //alert(data.mess);
+                    this.setState({
+                        PopUpColor:'danger',
+                        PopUpMessage:'Login failed. Check username or password.',
+                        ShowPopUp:true
+                    });
                     this.clearState();
                 }
                 
@@ -163,6 +179,17 @@ class Login extends React.Component {
         ?
         <Tab.Container defaultActiveKey="login">
         <Card>
+        {this.state.ShowPopUp?
+            <PopUp 
+                ClosePopUp={(value)=>{
+                    this.setState({ShowPopUp:value})//callback
+                }} 
+                message={this.state.PopUpMessage} 
+                color={this.state.PopUpColor}
+                show={this.state.ShowPopUp}
+            />
+            :null
+        }
             <Card.Header>
             <Nav variant="pills" className="flex-column">
             <Row>

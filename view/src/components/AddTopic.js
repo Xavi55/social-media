@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 
+import PopUp from './PopUp';
 import '../styles/AddTopic.css';
 
 class AddTopic extends React.Component
@@ -18,7 +19,10 @@ class AddTopic extends React.Component
             subtext:'',
             timestamp:'',
             session:{},
-            redirect:false
+            redirect:false,
+            PopUpMessage:'',
+            PopUpColor:'',
+            ShowPopUp:false
         };
     }
 
@@ -41,7 +45,12 @@ class AddTopic extends React.Component
     {
         if(this.state.topicName.length===0 || this.state.subtext.length===0)
         {
-            alert('All Fields are required!');
+            //alert('All Fields are required!');
+            this.setState({
+                PopUpColor:'danger',
+                PopUpMessage:'All fields are needed!',
+                ShowPopUp:true
+            })
         }
         else
         {
@@ -74,7 +83,12 @@ class AddTopic extends React.Component
             }
             else
             {
-                alert('Make sure to login!');
+                //alert('Make sure to login!');
+                this.setState({
+                    PopUpColor:'danger',
+                    PopUpMessage:'Log in First!',
+                    ShowPopUp:true
+                });
             }
         }
     }
@@ -150,8 +164,18 @@ class AddTopic extends React.Component
                         </InputGroup>
                     </Card.Body>
                     <Button variant="primary" onClick={this.handleSumbit}>Sumbit</Button>
-                    
+                    {this.state.ShowPopUp?
+                    <PopUp 
+                        ClosePopUp={(value)=>{
+                            this.setState({ShowPopUp:value})//callback
+                        }} 
+                        message={this.state.PopUpMessage} 
+                        color={this.state.PopUpColor}
+                        show={this.state.ShowPopUp}
+                    />
+                        :null}
                 </Card>
+
                 :
                 <Redirect to={{
                     pathname:`/topic/${this.state.topicName}`,
