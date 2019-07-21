@@ -14,7 +14,13 @@
 #singleTopic .card-subtitle
 {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+}
+#singleTopic .card-subtitle span:hover
+{
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
 }
 #singleTopic .card-subtitle i
 {

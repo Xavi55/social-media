@@ -2,9 +2,48 @@
 {
     margin-bottom: 1em;
 }
+.blurb
+{
+    display: flex;
+}
+.blurb i:hover
+{
+    cursor: pointer;
+}
+.controls
+{
+    margin: 0;
+    padding: 0;
+    height: 3rem;
+}
+.controls div
+{
+    cursor: pointer;
+    height: 20px;
+    width: 3%;
+}
+.controls i:hover
+{
+    color:red;
+}
+.controls i.liked
+{
+    color:red;
+}
+.blurb .reply-btn
+{
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 5px;
+}
+.blurb .reply-btn:hover
+{
+    color: chartreuse;
+}
 .topic-message .alert
 {
     margin: 0;
+    width: 100%;
 }
 .topic-message .message-info
 {

@@ -21,6 +21,7 @@ class Topic extends React.Component
         super(props)
         this.state={
             listMessages:[],
+            tempMessages:[],
             message:'',
             timestamp:'',
             session:{},
@@ -52,7 +53,10 @@ class Topic extends React.Component
         .then(res=>res.json())
         .then(data=>
         {
-            this.setState({listMessages:data.messages});
+            this.setState({
+                listMessages:data.messages,
+                tempMessages:data.messages
+            });
         });
     }
 
@@ -132,6 +136,24 @@ class Topic extends React.Component
         this.setState({message:e});
     }
 
+    sortBy=(code)=>
+    {
+        if(code===2)
+        {
+            let x = this.state.tempMessages;
+            let size=this.state.tempMessages.length
+            let n=Math.floor(size/2);
+
+            for(let i=0 ;i<n;i++)
+            {
+                let temp=x[i];
+                x[i]=x[x.length-i-1];
+                x[x.length-i-1]=temp;
+            }
+            this.setState({listMessages:x});
+        }
+    }
+
     getDate=()=>
     {
         const Months={
@@ -181,6 +203,7 @@ class Topic extends React.Component
                         {main.subtext}
                     </Card.Text>
                     <Card.Subtitle>
+                        <div className='sort-messages'>Sort By: <span onClick={()=>this.sortBy(1)}>Litt's</span>&nbsp;&nbsp;<span onClick={()=>this.sortBy(2)}>Recents</span></div>
                         <div className='topic-info'>
                             <i className="fa fa-user" aria-hidden="true"></i>{main.author} on {main.timestamp}
                         </div>
