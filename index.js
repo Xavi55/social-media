@@ -173,6 +173,13 @@ app.get('/loadMessages/:topicID', async(req,res)=>
     res.json({'messages':rev});
     //res.json({'Messages':x});
 })
+app.post('/message/like-dislike/:messageID', async(req,res)=>
+{
+    console.log('hello',req.params.messageID);
+})
+//insert reply
+//app.get('/message/add-reply/:messageID)
+
 /////////////////////////////////////////////
 app.listen(PORT,()=>
 {

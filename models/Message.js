@@ -5,7 +5,9 @@ const Message = new mongoose.Schema
     message:String,
     author:String,
     timestamp:String,
-    reply:String
+    reply:Boolean,
+    likes:Number,
+    dislikes:Number,
 });
 
 module.exports = mongoose.model('Message',Message);

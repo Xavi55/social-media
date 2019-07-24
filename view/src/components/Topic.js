@@ -27,7 +27,9 @@ class Topic extends React.Component
             session:{},
             PopUpMessage:'',
             PopUpColor:'',
-            ShowPopUp:false
+            ShowPopUp:false,
+            sortToggle:0,
+            modalReply:false
         }
     }
 
@@ -130,6 +132,17 @@ class Topic extends React.Component
         }
        
     }
+    //HERE 
+    //make a new reply based on the parent message._id
+    handleReply=(value,id)=>
+    {
+        console.log(value, id);
+    }
+
+    submitReply=(mess)=>
+    {
+        console.log('reply',mess);
+    }
 
     handleChange=(e)=>
     {
@@ -138,21 +151,66 @@ class Topic extends React.Component
 
     sortBy=(code)=>
     {
-        if(code===2)
+        //mini function
+        this.reverseList=(arr)=>
         {
-            let x = this.state.tempMessages;
-            let size=this.state.tempMessages.length
+            let size=arr.length
             let n=Math.floor(size/2);
 
             for(let i=0 ;i<n;i++)
             {
-                let temp=x[i];
-                x[i]=x[x.length-i-1];
-                x[x.length-i-1]=temp;
+                let temp=arr[i];
+                arr[i]=arr[arr.length-i-1];
+                arr[arr.length-i-1]=temp;
             }
+
+            return arr;
+        }
+
+        if(code===2)
+        {
+            let x = this.reverseList(this.state.tempMessages);
             this.setState({listMessages:x});
         }
+
+        else
+        {
+            let toggle = this.state.sortToggle;
+            if(!toggle)
+            {
+                let x = [...this.state.tempMessages];
+                //bubble-sort
+                for(let i=0; i<x.length;i++)
+                {
+                    for(let j=i+1;j<x.length;j++)
+                    {
+                        if(x[j].likes>x[i].likes)
+                        {
+                            let temp = x[i];
+                            x[i]=x[j];
+                            x[j]=temp;
+                        }
+                    }
+                }
+                this.setState({listMessages:x,sortToggle:1});
+            }
+            else if(toggle===1)
+            {
+                //likes acending
+                let x = this.reverseList(this.state.listMessages);
+                this.setState({listMessages:x,sortToggle:2})
+            }
+            else
+            {
+                //revert 
+                this.setState({
+                    listMessages:this.state.tempMessages, sortToggle:0
+                });
+            }
+        }
     }
+
+
 
     getDate=()=>
     {
@@ -179,6 +237,12 @@ class Topic extends React.Component
         this.setState({show:!this.state.ShowPopUp});
     }
 
+    handleLike=(val,id)=>
+    {
+        console.log(val,id);
+        //a user must have a record of the liked and disliked messages
+    }
+
     componentWillMount()
     {
         this.loginCheck();
@@ -203,7 +267,7 @@ class Topic extends React.Component
                         {main.subtext}
                     </Card.Text>
                     <Card.Subtitle>
-                        <div className='sort-messages'>Sort By: <span onClick={()=>this.sortBy(1)}>Litt's</span>&nbsp;&nbsp;<span onClick={()=>this.sortBy(2)}>Recents</span></div>
+                        <div className='sort-messages'>Sort By: <span onClick={()=>this.sortBy(1)}>Litt's</span>&nbsp;&nbsp;<span onClick={()=>this.sortBy(2)}>Oldest</span></div>
                         <div className='topic-info'>
                             <i className="fa fa-user" aria-hidden="true"></i>{main.author} on {main.timestamp}
                         </div>
@@ -216,7 +280,12 @@ class Topic extends React.Component
                             this.state.listMessages.map((message,i)=>
                             {
                                 return(
-                                    <Message key={i} messageData={message} />
+                                    <Message 
+                                        key={i} 
+                                        messageData={message} 
+                                        likeBtn={(val,id)=>this.handleLike(val,id)}
+                                        openReply={(value,id)=>{this.handleReply(value,id)}} 
+                                    />
                                 )
                             })
                             :

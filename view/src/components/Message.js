@@ -8,13 +8,23 @@ const Message =(props)=>
 {
 
     //console.log(props);
-    const message = props.messageData
+    const message = props.messageData;
     return(
         <div className='topic-message'>
         <div className='blurb'>
             <div className='controls'>
-                <i className="fa fa-fire" aria-hidden="true"></i>
-                <i className="fa fa-fire-extinguisher" aria-hidden="true"></i>
+                {message.likes}
+                <i 
+                    onClick={()=>props.likeBtn(1,message._id)} 
+                    className={`fa fa-fire ${message.likes?'liked':null}`} 
+                    aria-hidden="true">
+                </i>
+                <i
+                    onClick={()=>props.likeBtn(2,message._id)} 
+                    className="fa fa-fire-extinguisher" 
+                    aria-hidden="true">
+                </i>
+                {message.dislikes}
             </div>
             <Alert
                 variant='info'    
@@ -22,7 +32,11 @@ const Message =(props)=>
                 {message.message} 
             </Alert>
             <div className='reply-btn'>
-                <i className="fa fa-reply" aria-hidden="true"></i>
+                <i
+                    onClick={()=>props.openReply(true,message._id)} 
+                    className="fa fa-reply" 
+                    aria-hidden="true">
+                </i>
             </div>
         </div>
             <div className='message-info'>
