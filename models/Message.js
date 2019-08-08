@@ -5,7 +5,7 @@ const Message = new mongoose.Schema
     message:String,
     author:String,
     timestamp:String,
-    reply:Boolean,
+    replyTo:String,
     likes:Number,
     dislikes:Number,
 });

@@ -21,9 +21,9 @@ return(
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto links">{/*mr-auto allows a space in between */}
-            <Nav.Link><Link to='/'>Home</Link></Nav.Link>
+            <Link to='/'>Home</Link>&nbsp;&nbsp;&nbsp;
             {console.log(props)}
-            <Nav.Link><Link to='/login'>Login</Link></Nav.Link>
+            <Link to='/login'>Login</Link>
             {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>

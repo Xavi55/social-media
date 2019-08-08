@@ -23,7 +23,7 @@ app.use(sess({
     secret:'secret01',
     resave:false,
     saveUninitialized:true
-}))
+}));
 
 //Serve these files for the view
 app.use(express.static(path.join(__dirname,'view/build')));
@@ -51,7 +51,7 @@ app.post('/signup',async (req,res)=>
         });
         res.json({'pass':1,'mess':'New user made'});
     }
-})
+});
 
 app.post('/login',async (req,res) =>
 {
@@ -120,7 +120,7 @@ app.post('/addTopic',async (req,res)=>
         });
         res.json({'pass':1,'mess':'New topic made','topicName':topicName});
     }
-})
+});
 
 app.get('/loadTopics',async (req,res)=>
 {
@@ -133,14 +133,14 @@ app.get('/loadTopics',async (req,res)=>
     }//most recent up top
 
     res.json({'topics':rev});
-})
+});
 
 app.post('/newMessage',async(req,res)=>
 {
     let {
         topicID,
         message,
-        reply,
+        replyTo,
         author,
         timestamp,
 
@@ -149,12 +149,12 @@ app.post('/newMessage',async(req,res)=>
     await Message.create({
         'topicID':topicID,
         'message':message,
-        'reply':reply,
+        'replyTo':replyTo,
         'author':author,
         'timestamp':timestamp
     });
-    res.json({'pass':1,'mess':'new message'})
-})
+    res.json({'pass':1,'mess':'message saved'})
+});
 
 app.get('/loadMessages/:topicID', async(req,res)=>
 {
@@ -162,7 +162,7 @@ app.get('/loadMessages/:topicID', async(req,res)=>
             topicID
 
         } = req.params;
-    let x = await Message.find({"topicID":topicID});
+    let x = await Message.find({"topicID":topicID,"replyTo":"0"});
     let rev=[]
     for(let i=x.length-1;i>-1;i--)
     {
@@ -172,13 +172,24 @@ app.get('/loadMessages/:topicID', async(req,res)=>
 
     res.json({'messages':rev});
     //res.json({'Messages':x});
-})
+});
 app.post('/message/like-dislike/:messageID', async(req,res)=>
 {
     console.log('hello',req.params.messageID);
-})
-//insert reply
-//app.get('/message/add-reply/:messageID)
+});
+app.get('/loadMessages/replies/:messageID',async(req,res)=>
+{
+    let { messageID } = req.params;
+    let x = await Message.find({"replyTo":messageID});
+    let replies =[];
+    for(let i=x.length-1;i>-1;i--)
+    {
+        replies.push(x[i]);
+        //console.log(x[i]);
+    }//most recent up top
+
+    res.json({'replies':replies});
+});
 
 /////////////////////////////////////////////
 app.listen(PORT,()=>

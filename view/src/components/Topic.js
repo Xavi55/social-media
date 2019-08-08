@@ -8,6 +8,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
 
 
 import Message from './Message';
@@ -23,13 +24,14 @@ class Topic extends React.Component
             listMessages:[],
             tempMessages:[],
             message:'',
-            timestamp:'',
             session:{},
             PopUpMessage:'',
             PopUpColor:'',
             ShowPopUp:false,
             sortToggle:0,
-            modalReply:false
+            modalReply:false,
+            replyMessage:'',
+            replyMessageID:''
         }
     }
 
@@ -62,26 +64,47 @@ class Topic extends React.Component
         });
     }
 
-    submitMessage=()=>
+    fetchReplies=(id)=>
+    {
+        fetch('/loadMessages/replies/'+id)
+        .then(res=>res.json())
+        .then(data=>
+        {
+            console.log('replies',data.replies);
+            //return data.replies;
+        });
+    }
+
+    submitMessage=(code)=>
     {
         let sess = this.state.session;
         let topic = this.props.location.state.topic;
-        let message = this.state.message;
-
+        let timestamp = this.getDate();
+        let replyTo = 0;
+        let message='';
+        if(code)//turns into a reply
+        {
+            message = this.state.replyMessage;
+            replyTo = this.state.replyMessageID;
+        }
+        else
+        {
+            message = this.state.message
+        }
         if(message.length)
         {
-            if(sess.uID)//check login
+            if(sess.uID)//checAPB
             {
-                //console.log('check',sess,'topic',topic._id);
+                //console.log(APB,topic._id);
                 const options=
                 {
                     method:'POST',
                     body:JSON.stringify({
                         'topicID':topic._id,
-                        'reply':0,
+                        'replyTo':replyTo,
                         'author':sess.username,
-                        'timestamp':this.state.timestamp,
-                        'message':this.state.message
+                        'timestamp':timestamp,
+                        'message':message
                     }),
                     headers:{
                         'Accept':'application/json',
@@ -95,19 +118,30 @@ class Topic extends React.Component
                 {
                     if(data.pass)
                     {
-                        let temp=[{
-                            topicID:topic.id,
-                            reply:'0',
-                            message:this.state.message,
-                            author:sess.username,
-                            timestamp:this.state.timestamp
-                        }];
-                        let newList = temp.concat(this.state.listMessages);
-                        this.setState({
-                            listMessages:newList,
-                            message:''
-                        });
-                        console.log(this.state.listMessages);
+                        if(!code)
+                        {
+                            this.setState({
+                                replyMessage:'',
+                                modalReply:false
+                            });
+                        }
+                        else
+                        {
+                            let temp=[{
+                                topicID:topic.id,
+                                reply:'0',
+                                message:this.state.message,
+                                author:sess.username,
+                                timestamp:timestamp
+                            }];
+                            let newList = temp.concat(this.state.listMessages);
+                            this.setState({
+                                listMessages:newList,
+                                message:'',
+                            });
+                            console.log(this.state.listMessages); 
+                        }
+                        console.log(data.mess);
                     }
                 });
             }
@@ -118,7 +152,7 @@ class Topic extends React.Component
                     PopUpMessage:'Log in First!',
                     PopUpColor:'danger',
                     ShowPopUp:true
-                })
+                });
             }
         }
         else
@@ -128,25 +162,38 @@ class Topic extends React.Component
                 PopUpMessage:'Need Message!',
                 PopUpColor:'danger',
                 ShowPopUp:true
-            })
+            });
         }
-       
     }
-    //HERE 
-    //make a new reply based on the parent message._id
+
     handleReply=(value,id)=>
     {
         console.log(value, id);
+        this.setState({
+            modalReply: value,
+            replyMessageID:id
+        });
     }
 
-    submitReply=(mess)=>
+    cancelReply=()=>
     {
-        console.log('reply',mess);
+        this.setState({
+            modalReply:false,
+            replyMessage:'',
+            replyMessageID:''
+        })
     }
 
-    handleChange=(e)=>
+    handleChange=(e,code)=>
     {
-        this.setState({message:e});
+        if(code)
+        {
+            this.setState({message:e});
+        }
+        else
+        {
+            this.setState({replyMessage:e});
+        }
     }
 
     sortBy=(code)=>
@@ -229,7 +276,7 @@ class Topic extends React.Component
             11:"Dec"
         };
         let d = new Date();
-        this.setState({timestamp:String(Months[d.getMonth()])+' '+String(d.getDate())});
+        return String(Months[d.getMonth()])+' '+String(d.getDate());
     }
 
     closePopUp=()=>
@@ -247,7 +294,6 @@ class Topic extends React.Component
     {
         this.loginCheck();
         this.fetchMessages();
-        this.getDate();
         //console.log(this.props.location.state.topic);
     }
 
@@ -280,12 +326,18 @@ class Topic extends React.Component
                             this.state.listMessages.map((message,i)=>
                             {
                                 return(
+                                    <div className='message-blurb'>
                                     <Message 
                                         key={i} 
                                         messageData={message} 
                                         likeBtn={(val,id)=>this.handleLike(val,id)}
                                         openReply={(value,id)=>{this.handleReply(value,id)}} 
                                     />
+                                    {
+                                        //render replies if any
+                                        this.fetchReplies(message._id)
+                                    }
+                                    </div>
                                 )
                             })
                             :
@@ -312,19 +364,55 @@ class Topic extends React.Component
                         aria-label="message"
                         maxLength='140'
                         as='textarea'
-                        onChange={(e)=>this.handleChange(e.target.value)}
+                        onChange={(e)=>this.handleChange(e.target.value,1)}
                         value={this.state.message}
                     />
                         <InputGroup.Append>
                             <Button 
                                 variant="outline-success"
-                                onClick={this.submitMessage}
+                                onClick={()=>this.submitMessage(0)}
                             >
                                 <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
                             </Button>
                         </InputGroup.Append>
                     </InputGroup>
                     </Card>
+                    <Modal show={this.state.modalReply} onHide={this.cancelReply}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Submit Reply</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                        {
+                        this.state.ShowPopUp
+                        ?
+                            <PopUp 
+                                ClosePopUp={(value)=>{
+                                    this.setState({ShowPopUp:value})//callback
+                                }} 
+                                message={this.state.PopUpMessage} 
+                                color={this.state.PopUpColor}
+                                show={this.state.ShowPopUp}
+                            />
+                        :
+                            null
+                         }           
+                            <FormControl
+                                autoFocus={true}
+                                placeholder="Type Your Reply"
+                                aria-label="message"
+                                maxLength='140'
+                                as='textarea'
+                                onChange={(e)=>this.handleChange(e.target.value,0)}
+                                value={this.replyMessage}
+                            />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={()=>this.submitMessage(1)}>
+                                Submit
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                    {/**Make a Seperate Modal Component/File??*/}
                     </Col>
                 </Row>
             </Container>
