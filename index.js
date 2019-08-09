@@ -181,14 +181,27 @@ app.get('/loadMessages/replies/:messageID',async(req,res)=>
 {
     let { messageID } = req.params;
     let x = await Message.find({"replyTo":messageID});
-    let replies =[];
+    if(x.length===0)
+    {
+        res.json({"pass":0,"mess":"no replies"});
+    }
+    else
+    {
+        //make obj first then use the messageID as its key
+        //let temp={};
+        //temp[messageID]=x;
+        res.json({"pass":1,"mess":"replies found","replies":x});
+    }
+    //HERE>>>>>
+
+    /* let replies =[];
     for(let i=x.length-1;i>-1;i--)
     {
         replies.push(x[i]);
         //console.log(x[i]);
     }//most recent up top
-
-    res.json({'replies':replies});
+*/
+    //res.json({messageID:x}); 
 });
 
 /////////////////////////////////////////////

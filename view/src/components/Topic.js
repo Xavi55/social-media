@@ -31,7 +31,19 @@ class Topic extends React.Component
             sortToggle:0,
             modalReply:false,
             replyMessage:'',
-            replyMessageID:''
+            replyMessageID:'',
+            replies:{
+                "5d37f3217d39791afe037783":[
+                    {
+                        "message":"#reply1",
+                        "author":"user",
+                        "timestamp":"Aug 7"},
+                    {
+                        "message":"#reply2",
+                        "author":"user",
+                        "timestamp":"Aug 7"}
+                ],
+            }
         }
     }
 
@@ -57,6 +69,10 @@ class Topic extends React.Component
         .then(res=>res.json())
         .then(data=>
         {
+            for(let i in data.messages)
+            {
+                this.fetchReplies(data.messages[i]._id)
+            }
             this.setState({
                 listMessages:data.messages,
                 tempMessages:data.messages
@@ -70,8 +86,21 @@ class Topic extends React.Component
         .then(res=>res.json())
         .then(data=>
         {
-            console.log('replies',data.replies);
-            //return data.replies;
+            if(data.pass)
+            {
+                //console.log(data.replies);
+                let temp=this.state.replies;
+                temp[id].push(...data.replies)
+                //console.log(temp);
+
+                //console.log(data.replies);
+                this.setState({replies:temp});
+                //return data.replies;
+            }
+            else
+            {
+                console.log(data.mess);
+            }
         });
     }
 
@@ -93,9 +122,8 @@ class Topic extends React.Component
         }
         if(message.length)
         {
-            if(sess.uID)//checAPB
+            if(sess.uID)
             {
-                //console.log(APB,topic._id);
                 const options=
                 {
                     method:'POST',
@@ -118,7 +146,7 @@ class Topic extends React.Component
                 {
                     if(data.pass)
                     {
-                        if(!code)
+                        if(code)
                         {
                             this.setState({
                                 replyMessage:'',
@@ -328,14 +356,31 @@ class Topic extends React.Component
                                 return(
                                     <div className='message-blurb'>
                                     <Message 
-                                        key={i} 
+                                        key={i}
+                                        rank={0} 
                                         messageData={message} 
                                         likeBtn={(val,id)=>this.handleLike(val,id)}
                                         openReply={(value,id)=>{this.handleReply(value,id)}} 
                                     />
                                     {
-                                        //render replies if any
-                                        this.fetchReplies(message._id)
+                                        this.state.replies[message._id]
+                                        ?
+                                        <div className={'replies'}>
+                                            {
+                                        this.state.replies[message._id].map((reply,j)=>
+                                        {
+                                            return(
+                                            <Message
+                                                key={j}
+                                                rank={'1'}
+                                                messageData={reply}
+                                                openReply={(value,id)=>{this.handleReply(value,id)}} 
+                                            />
+                                                )
+                                        })}
+                                        </div>
+                                        :
+                                        null
                                     }
                                     </div>
                                 )

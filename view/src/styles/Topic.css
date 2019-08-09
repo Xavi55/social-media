@@ -38,3 +38,8 @@ hr
 {
     margin: 2px 0;
 }
+
+.message-blurb .replies
+{
+    margin-left: 6em;
+}

@@ -8,6 +8,7 @@ const Message = new mongoose.Schema
     replyTo:String,
     likes:Number,
     dislikes:Number,
+    rank:Number
 });
 
 module.exports = mongoose.model('Message',Message);

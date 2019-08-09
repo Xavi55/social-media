@@ -6,26 +6,30 @@ import '../styles/Message.css';
 
 const Message =(props)=>
 {
-
-    //console.log(props);
+    console.log(props.rank);
     const message = props.messageData;
     return(
-        <div className='topic-message'>
+        <div className={`topic-message rank-${props.rank}`}>
         <div className='blurb'>
-            <div className='controls'>
-                {message.likes}
-                <i 
-                    onClick={()=>props.likeBtn(1,message._id)} 
-                    className={`fa fa-fire ${message.likes?'liked':null}`} 
-                    aria-hidden="true">
-                </i>
-                <i
-                    onClick={()=>props.likeBtn(2,message._id)} 
-                    className="fa fa-fire-extinguisher" 
-                    aria-hidden="true">
-                </i>
-                {message.dislikes}
-            </div>
+            {
+                props.rank
+                ?null
+                :
+                <div className='controls'>
+                    {message.likes}
+                    <i 
+                        onClick={()=>props.likeBtn(1,message._id)} 
+                        className={`fa fa-fire ${message.likes?'liked':null}`} 
+                        aria-hidden="true">
+                    </i>
+                    <i
+                        onClick={()=>props.likeBtn(2,message._id)} 
+                        className="fa fa-fire-extinguisher" 
+                        aria-hidden="true">
+                    </i>
+                    {message.dislikes}
+                </div>            
+            }
             <Alert
                 variant='info'    
             >
