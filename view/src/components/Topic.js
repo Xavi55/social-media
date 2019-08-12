@@ -33,6 +33,7 @@ class Topic extends React.Component
             replyMessage:'',
             replyMessageID:'',
             replies:{
+                /*
                 "5d37f3217d39791afe037783":[
                     {
                         "message":"#reply1",
@@ -43,6 +44,7 @@ class Topic extends React.Component
                         "author":"user",
                         "timestamp":"Aug 7"}
                 ],
+                */
             }
         }
     }
@@ -90,10 +92,16 @@ class Topic extends React.Component
             {
                 //console.log(data.replies);
                 let temp=this.state.replies;
-                temp[id].push(...data.replies)
-                //console.log(temp);
-
-                //console.log(data.replies);
+                try
+                {
+                    temp[id].push(...data.replies);
+                }
+                catch(e)
+                {
+                    //if the key does not exist, make one
+                    temp[id]=data.replies;
+                }
+                console.log(temp);
                 this.setState({replies:temp});
                 //return data.replies;
             }
@@ -111,10 +119,12 @@ class Topic extends React.Component
         let timestamp = this.getDate();
         let replyTo = 0;
         let message='';
+        let rank=0
         if(code)//turns into a reply
         {
             message = this.state.replyMessage;
             replyTo = this.state.replyMessageID;
+            rank=1
         }
         else
         {
@@ -132,7 +142,10 @@ class Topic extends React.Component
                         'replyTo':replyTo,
                         'author':sess.username,
                         'timestamp':timestamp,
-                        'message':message
+                        'message':message,
+                        'likes':0,
+                        'dislikes':0,
+                        'rank':rank
                     }),
                     headers:{
                         'Accept':'application/json',
@@ -148,7 +161,29 @@ class Topic extends React.Component
                     {
                         if(code)
                         {
+                            let temp=this.state.replies;
+                            let x={
+                                'topicID':topic._id,
+                                'replyTo':replyTo,
+                                'author':sess.username,
+                                'timestamp':timestamp,
+                                'message':message,
+                                'likes':0,
+                                'dislikes':0,
+                                'rank':rank
+                            };
+                            try
+                            {
+                                temp[replyTo].push(x);
+                            }
+                            catch(e)
+                            {
+                                //if the key does not exist, make one
+                                temp[replyTo]=[x];
+                            }
+                            console.log(temp);
                             this.setState({
+
                                 replyMessage:'',
                                 modalReply:false
                             });
@@ -372,7 +407,7 @@ class Topic extends React.Component
                                             return(
                                             <Message
                                                 key={j}
-                                                rank={'1'}
+                                                rank={1}
                                                 messageData={reply}
                                                 openReply={(value,id)=>{this.handleReply(value,id)}} 
                                             />
@@ -428,6 +463,7 @@ class Topic extends React.Component
                         </Modal.Header>
                         <Modal.Body>
                         {
+                            /*
                         this.state.ShowPopUp
                         ?
                             <PopUp 
@@ -440,6 +476,7 @@ class Topic extends React.Component
                             />
                         :
                             null
+                            */
                          }           
                             <FormControl
                                 autoFocus={true}

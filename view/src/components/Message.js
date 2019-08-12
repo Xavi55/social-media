@@ -6,14 +6,15 @@ import '../styles/Message.css';
 
 const Message =(props)=>
 {
-    console.log(props.rank);
+    //console.log(props.rank);
     const message = props.messageData;
     return(
         <div className={`topic-message rank-${props.rank}`}>
         <div className='blurb'>
             {
                 props.rank
-                ?null
+                ?
+                null
                 :
                 <div className='controls'>
                     {message.likes}
@@ -35,13 +36,20 @@ const Message =(props)=>
             >
                 {message.message} 
             </Alert>
-            <div className='reply-btn'>
-                <i
-                    onClick={()=>props.openReply(true,message._id)} 
-                    className="fa fa-reply" 
-                    aria-hidden="true">
-                </i>
-            </div>
+            {
+                //stop replies getting replies?
+                props.rank
+                ?
+                null
+                :
+                <div className='reply-btn'>
+                    <i
+                        onClick={()=>props.openReply(true,message._id)} 
+                        className="fa fa-reply" 
+                        aria-hidden="true">
+                    </i>
+                </div>
+            }
         </div>
             <div className='message-info'>
                 -{message.author} {message.timestamp}

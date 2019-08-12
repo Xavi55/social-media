@@ -143,6 +143,9 @@ app.post('/newMessage',async(req,res)=>
         replyTo,
         author,
         timestamp,
+        likes,
+        dislikes,
+        rank
 
     } = req.body;
 
@@ -151,7 +154,10 @@ app.post('/newMessage',async(req,res)=>
         'message':message,
         'replyTo':replyTo,
         'author':author,
-        'timestamp':timestamp
+        'timestamp':timestamp,
+        'likes':likes,
+        'dislikes':dislikes,
+        'rank':rank
     });
     res.json({'pass':1,'mess':'message saved'})
 });
