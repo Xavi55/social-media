@@ -6,12 +6,12 @@ import '../styles/Message.css';
 
 const Message =(props)=>
 {
-    //console.log(props.rank);
     const message = props.messageData;
     return(
-        <div className={`topic-message rank-${props.rank}`}>
+        <div className={`topic-message rank-${message.rank}`}>
         <div className='blurb'>
             {
+                //hide reply button for now
                 props.rank
                 ?
                 null
@@ -38,13 +38,12 @@ const Message =(props)=>
             </Alert>
             {
                 //stop replies getting replies?
-                props.rank
-                ?
-                null
+                message.rank
+                ?null
                 :
                 <div className='reply-btn'>
                     <i
-                        onClick={()=>props.openReply(true,message._id)} 
+                        onClick={()=>props.openReply(true,message._id,message.rank+1)} 
                         className="fa fa-reply" 
                         aria-hidden="true">
                     </i>

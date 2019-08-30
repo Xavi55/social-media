@@ -201,7 +201,7 @@ class Login extends React.Component {
             <Tab.Content>
                 <Tab.Pane eventKey="login">
                     <Card.Body>
-                        <Card.Title className='text-center'>Join the conversation!</Card.Title>
+                        <Card.Title className='text-center'>Welcome Back!</Card.Title>
                         <Form>
                             <Form.Group controlId="username">
                                 <FormControl 

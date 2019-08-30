@@ -24,6 +24,7 @@ class Topic extends React.Component
             listMessages:[],
             tempMessages:[],
             message:'',
+            messageRank:0,
             session:{},
             PopUpMessage:'',
             PopUpColor:'',
@@ -124,7 +125,7 @@ class Topic extends React.Component
         {
             message = this.state.replyMessage;
             replyTo = this.state.replyMessageID;
-            rank=1
+            rank=this.state.messageRank
         }
         else
         {
@@ -229,12 +230,13 @@ class Topic extends React.Component
         }
     }
 
-    handleReply=(value,id)=>
+    handleReply=(value,id,rank)=>
     {
         console.log(value, id);
         this.setState({
             modalReply: value,
-            replyMessageID:id
+            replyMessageID:id,
+            messageRank:rank
         });
     }
 
@@ -243,7 +245,8 @@ class Topic extends React.Component
         this.setState({
             modalReply:false,
             replyMessage:'',
-            replyMessageID:''
+            replyMessageID:'',
+            messageRank:0
         })
     }
 
@@ -392,7 +395,7 @@ class Topic extends React.Component
                                     <div className='message-blurb'>
                                     <Message 
                                         key={i}
-                                        rank={0} 
+                                        rank={message.rank} 
                                         messageData={message} 
                                         likeBtn={(val,id)=>this.handleLike(val,id)}
                                         openReply={(value,id)=>{this.handleReply(value,id)}} 
@@ -407,9 +410,9 @@ class Topic extends React.Component
                                             return(
                                             <Message
                                                 key={j}
-                                                rank={1}
+                                                rank={reply.rank}
                                                 messageData={reply}
-                                                openReply={(value,id)=>{this.handleReply(value,id)}} 
+                                                openReply={(value,id,rank)=>{this.handleReply(value,id,rank)}} 
                                             />
                                                 )
                                         })}
