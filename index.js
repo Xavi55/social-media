@@ -15,6 +15,7 @@ const db = require('./models/dbAccess');
 const User = require('./models/User');
 const Topic = require('./models/Topic'); 
 const Message = require('./models/Message'); 
+const Like = require('./models/Like'); 
 
 //Middleware
 app.use(morgan('dev'));
@@ -24,6 +25,7 @@ app.use(sess({
     resave:false,
     saveUninitialized:true
 }));
+//NOTE :: tokens are better for more users
 
 //Serve these files for the view
 app.use(express.static(path.join(__dirname,'view/build')));
@@ -179,9 +181,59 @@ app.get('/loadMessages/:topicID', async(req,res)=>
     res.json({'messages':rev});
     //res.json({'Messages':x});
 });
-app.post('/message/like-dislike/:messageID', async(req,res)=>
+app.post('/message/like-dislike', async(req,res)=>
 {
-    console.log('hello',req.params.messageID);
+    let { code, messageID, userID } = req.body;
+    //userID='5cf16101867082240dfafc50';
+    //console.log(req.session.uID);
+    if(!req.session.uID===undefined || req.session.uID!=userID)
+    {
+        console.log('dead');
+        res.json({pass:0,'mess':'not logged in'});
+    }
+    else
+    {
+        let x = await Like.find({'userID':userID,'messageID':messageID});
+        if(x.length===0)
+        {
+            Like.create({
+                'userID':userID,
+                'messageID':messageID,
+                'liked':code
+            });
+            if(code)
+            {
+                Message.updateOne({'_id':messageID},{$inc:{'likes':1}})
+                .then(d=>console.log('inc like'));
+            }
+            else //it's a disliked message
+            {
+                Message.updateOne({'_id':messageID},{$inc:{'dislikes':1}})
+                .then(d=>console.log('dec like'));
+            }
+        }
+        else
+        {
+            //console.log(code,messageID);
+            //Like.find({'userID':userID,'messageID':messageID}).then(d=>console.log(d));
+            Like.updateOne({'userID':userID,'messageID':messageID},{'liked':code})
+            .then(d=>{if(d.nModified)console.log('like change')});
+
+             //console.log(x);
+            if(code && x[0]['liked']===0)
+            {
+                Message.updateOne({'_id':messageID},{$inc:{'likes':1,'dislikes':-1}})
+                .then(d=>console.log('changed to like',d));
+            }
+            
+            if(code===0 && x[0]['liked']===1)//it's a previously disliked message
+            {
+                Message.updateOne({'_id':messageID},{$inc:{'likes':-1,'dislikes':1}})
+                .then(d=>console.log('changed to dislike',d));
+            }
+        }
+        res.json({'mess':'like/dislike'});
+    }
 });
 app.get('/loadMessages/replies/:messageID',async(req,res)=>
 {

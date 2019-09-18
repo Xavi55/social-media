@@ -24,7 +24,7 @@ const Message =(props)=>
                         aria-hidden="true">
                     </i>
                     <i
-                        onClick={()=>props.likeBtn(2,message._id)} 
+                        onClick={()=>props.likeBtn(0,message._id)} 
                         className="fa fa-fire-extinguisher" 
                         aria-hidden="true">
                     </i>

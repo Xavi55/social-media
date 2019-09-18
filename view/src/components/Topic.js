@@ -350,9 +350,29 @@ class Topic extends React.Component
         this.setState({show:!this.state.ShowPopUp});
     }
 
-    handleLike=(val,id)=>
+    handleLike=(val,id,)=>
     {
-        console.log(val,id);
+        //console.log(val,id);
+        const options=
+            {
+                method:'POST',
+                body:JSON.stringify({
+                    'code':val,
+                    'messageID':id,
+                    'userID':this.state.session.uID
+                }),
+                headers:{
+                    'Accept':'application/json',
+                    'Content-Type':'application/json'
+                    }
+            };
+
+        fetch('/message/like-dislike',options).then(res=>res.json())
+        .then(data=>
+        {
+            console.log('...');
+        })
+
         //a user must have a record of the liked and disliked messages
     }
 
