@@ -11,7 +11,6 @@ const Message =(props)=>
         <div className={`topic-message rank-${message.rank}`}>
         <div className='blurb'>
             {
-                //hide reply button for now
                 props.rank
                 ?
                 null

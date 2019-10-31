@@ -101,27 +101,32 @@ app.post('/addTopic',async (req,res)=>
     //let topicName = req.body.topicName;
     //let subtext = req.body.subtext;
     //let author = req.body.author;
-    let {
+    if(req.session.uID)
+    {
+        let {
         topicName,
         subtext,
-        author
-    } = req.body;
-    let timestamp = req.body.timestamp;
-    let x = await Topic.find({'topicName':topicName});
-    if(x.length)
-    {
-        res.json({'pass':0,'mess':'Topic already exists'});
+        author } = req.body;
+        let timestamp = req.body.timestamp;
+        let x = await Topic.find({'topicName':topicName});
+        if(x.length)
+        {
+            res.json({'pass':0,'mess':'Topic already exists'});
+        }
+        else
+        {
+            Topic.create({
+                'topicName':topicName,
+                'subtext':subtext,
+                'author':author,
+                'timestamp':timestamp
+            });
+            res.json({'pass':1,'mess':'New topic made','topicName':topicName});
+        }
     }
     else
-    {
-        Topic.create({
-            'topicName':topicName,
-            'subtext':subtext,
-            'author':author,
-            'timestamp':timestamp
-        });
-        res.json({'pass':1,'mess':'New topic made','topicName':topicName});
-    }
+        res.json({'pass':0,'mess':'not logged in'})
+   
 });
 
 app.get('/loadTopics',async (req,res)=>
@@ -139,7 +144,9 @@ app.get('/loadTopics',async (req,res)=>
 
 app.post('/newMessage',async(req,res)=>
 {
-    let {
+    if(req.session.uID)
+    {
+        let {
         topicID,
         message,
         replyTo,
@@ -162,6 +169,10 @@ app.post('/newMessage',async(req,res)=>
         'rank':rank
     });
     res.json({'pass':1,'mess':'message saved'})
+    }
+    else
+        res.json({'pass':0,'mess':'not logged in'})
+    
 });
 
 app.get('/loadMessages/:topicID', async(req,res)=>

@@ -196,7 +196,8 @@ class Topic extends React.Component
                                 reply:'0',
                                 message:this.state.message,
                                 author:sess.username,
-                                timestamp:timestamp
+                                timestamp:timestamp,
+                                rank:0
                             }];
                             let newList = temp.concat(this.state.listMessages);
                             this.setState({
@@ -418,7 +419,7 @@ class Topic extends React.Component
                                         rank={message.rank} 
                                         messageData={message} 
                                         likeBtn={(val,id)=>this.handleLike(val,id)}
-                                        openReply={(value,id)=>{this.handleReply(value,id)}} 
+                                        openReply={(value,id,rank)=>{this.handleReply(value,id,rank)}} 
                                     />
                                     {
                                         this.state.replies[message._id]

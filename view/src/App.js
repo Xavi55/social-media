@@ -29,7 +29,7 @@ class App extends React.Component {
         })
     }
 
-    /*componentWillMount()
+    /* componentDidUpdate()
     {
         fetch('/login')
         .then(res=>res.json())
@@ -37,7 +37,7 @@ class App extends React.Component {
         {
             this.setState({session:res});
         }) 
-    }*/
+    } */
 
     render(){
     return (
@@ -51,7 +51,7 @@ class App extends React.Component {
                 
                 <Route path='/topic' component={Topic}/>
 
-                <Route exact path='*' component={()=>{return(<h1 style={{textAlign:'center'}}><br/><br/>404 ...</h1>)}}/>
+                <Route exact path='*' component={()=>{return(<h1 style={{textAlign:'center'}}><br/><br/>The page you're looking for does not exist.<br/>404 ...</h1>)}}/>
             </Switch>
         </BrowserRouter>
         <div>
