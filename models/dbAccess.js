@@ -4,7 +4,7 @@ let OKAY=1
 try
 {
     const URI = config.URI;
-    mongoose.connect(URI, {useNewUrlParser:true})
+    mongoose.connect(URI, {useNewUrlParser:true, useUnifiedTopology:true})
     .then(db => 
         {
             console.log('mongoDB OKAY')
